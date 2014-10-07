@@ -20,10 +20,13 @@ typedef void (* glBindBuffer_func)(GLenum target,  GLuint buffer);
 void glBindBuffer(GLenum target, GLuint buffer) {
 
     void *gl_handle;
+    static glBindBuffer_func gbb = NULL;
 
     if(target != GL_ARRAY_BUFFER || buffer != 0) {
-        gl_handle = dlopen("libGL.so", RTLD_LAZY);
-        glBindBuffer_func gbb = dlsym(gl_handle, "glBindBuffer");
+        if(!gbb) {
+            gl_handle = dlopen("libGL.so", RTLD_LAZY);
+            gbb = dlsym(gl_handle, "glBindBuffer");
+        }
         gbb(target, buffer);
     }
 }
