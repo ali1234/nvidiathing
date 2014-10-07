@@ -24,7 +24,7 @@ void glBindBuffer(GLenum target, GLuint buffer) {
 
     if(target != GL_ARRAY_BUFFER || buffer != 0) {
         if(!gbb) {
-            gl_handle = dlopen("libGL.so", RTLD_LAZY);
+            gl_handle = dlopen("libGL.so", RTLD_NEXT);
             gbb = dlsym(gl_handle, "glBindBuffer");
         }
         gbb(target, buffer);
