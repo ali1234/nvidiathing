@@ -1,6 +1,8 @@
 // preload.c
 // Alistair Buxton <a.j.buxton@gmail.com>
 
+#define _GNU_SOURCE
+
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,15 +21,13 @@ typedef void (* glBindBuffer_func)(GLenum target,  GLuint buffer);
 
 void glBindBuffer(GLenum target, GLuint buffer) {
 
-    void *gl_handle;
     static glBindBuffer_func gbb = NULL;
 
     if(target == GL_ARRAY_BUFFER && buffer == 0) {
         return;
     }
     if(!gbb) {
-        gl_handle = dlopen("libGL.so", RTLD_NEXT);
-        gbb = dlsym(gl_handle, "glBindBuffer");
+        gbb = dlsym(RTLD_NEXT, "glBindBuffer");
     }
     gbb(target, buffer);
 }
